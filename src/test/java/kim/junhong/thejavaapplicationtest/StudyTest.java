@@ -1,13 +1,41 @@
 package kim.junhong.thejavaapplicationtest;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
+
+    @Test
+    @DisplayName("조건에 따라 테스트 실행하기1")
+    @EnabledOnOs({OS.MAC})
+    @EnabledOnJre({JRE.JAVA_8, JRE.JAVA_11})
+    @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "LOCAL")
+    void env_test_enable() {
+        String test_env = System.getenv("TEST_ENV");
+
+        // 예제1
+        assumeTrue("LOCAL".equalsIgnoreCase(test_env));
+        System.out.println("assumeTrue test_env = " + test_env);
+
+        // 예제2
+        assumingThat("LOCAL".equalsIgnoreCase(test_env), () -> {
+            System.out.println("assumingThat test_env = " + test_env);
+        });
+    }
+
+    @Test
+    @DisplayName("조건에 따라 테스트 실행하기2")
+    @DisabledOnOs({OS.MAC})
+    void env_test_disable() {
+        // nothing
+    }
 
     @Test
     @DisplayName("스터디 만들기")
