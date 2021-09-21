@@ -13,6 +13,20 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 class StudyTest {
 
     @Test
+    @DisplayName("스터디 만들기 fast")
+    @Tag("fast")
+    void create_new_study_fast() {
+
+    }
+
+    @Test
+    @DisplayName("스터디 만들기 slow")
+    @Tag("slow")
+    void create_new_study_slow() {
+
+    }
+
+    @Test
     @DisplayName("조건에 따라 테스트 실행하기1")
     @EnabledOnOs({OS.MAC})
     @EnabledOnJre({JRE.JAVA_8, JRE.JAVA_11})
