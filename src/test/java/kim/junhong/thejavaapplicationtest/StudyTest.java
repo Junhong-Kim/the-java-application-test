@@ -2,7 +2,9 @@ package kim.junhong.thejavaapplicationtest;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -23,10 +25,15 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 //@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@ExtendWith(FindSlowTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StudyTest {
 
     int value = 1;
+
+    @RegisterExtension
+    static FindSlowTestExtension findSlowTestExtension =
+            new FindSlowTestExtension(1_000L);
 
     @Order(2)
     @FastTest
@@ -37,9 +44,10 @@ class StudyTest {
     }
 
     @Order(1)
-    @SlowTest
+    @Test
     @DisplayName("스터디 만들기 slow")
-    void create_new_study_slow() {
+    void create_new_study_slow() throws InterruptedException {
+        Thread.sleep(1_005L);
         System.out.println(this);
         System.out.println(value++);
     }
@@ -95,7 +103,7 @@ class StudyTest {
     @ParameterizedTest(name = "{index} {displayName} message={0}")
     @CsvSource({"10, 'java study'", "20, 'spring study'"})
     void csvSourceParameterizedTest(ArgumentsAccessor argumentsAccessor) {
-        Study study = new Study(argumentsAccessor.getInteger(0),argumentsAccessor.getString(1));
+        Study study = new Study(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
         System.out.println(study);
     }
 
@@ -110,7 +118,7 @@ class StudyTest {
 
         @Override
         public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) throws ArgumentsAggregationException {
-            return new Study(argumentsAccessor.getInteger(0),argumentsAccessor.getString(1));
+            return new Study(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
         }
     }
 
